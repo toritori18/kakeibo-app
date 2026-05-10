@@ -1,0 +1,26 @@
+# 環境変数（絶対にコミットしない）
+.env
+.env.local
+.env.*.local
+
+# 依存パッケージ
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# ビルド成果物
+client/dist/
+client/build/
+server/dist/
+
+# ログ
+*.log
+npm-debug.log*
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# エディタ設定
+.vscode/
+.idea/
