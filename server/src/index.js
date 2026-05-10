@@ -1,8 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const path = require('path');
 const Anthropic = require('@anthropic-ai/sdk');
-require('dotenv').config({ path: '../../.env' });
+// __dirname基準でパスを解決することでCWDに依存しない
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3001;
