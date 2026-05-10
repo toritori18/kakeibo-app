@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 
 // レシート画像アップロード＆解析コンポーネント
-export default function ReceiptUploader({ onAdd }) {
+export default function ReceiptUploader({ onAdd, expenses = [] }) {
   const [preview, setPreview] = useState(null);      // 画像プレビューURL
   const [file, setFile] = useState(null);            // 選択ファイル
   const [loading, setLoading] = useState(false);     // 解析中フラグ
@@ -113,9 +113,33 @@ export default function ReceiptUploader({ onAdd }) {
       )}
 
       {/* 解析結果の確認 */}
-      {result && (
+      {result && (() => {
+        // 負の金額チェック
+        const negativeItems = result.items?.filter((item) => item.price < 0) ?? [];
+        // 重複チェック（同一日付かつ同一合計金額）
+        const isDuplicate = expenses.some(
+          (e) => e.date === result.date && e.total === result.total
+        );
+        return (
         <div className="result-preview">
           <h3>解析結果の確認</h3>
+
+          {/* 検証警告 */}
+          {negativeItems.length > 0 && (
+            <div className="warning-msg">
+              ⚠️ 以下の商品で金額が負の値になっています。内容をご確認ください：
+              <ul>
+                {negativeItems.map((item, i) => (
+                  <li key={i}>{item.name}：¥{item.price.toLocaleString()}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {isDuplicate && (
+            <div className="warning-msg">
+              ⚠️ 同じ日付・合計金額のレシートがすでに登録されています（{result.date} ／ ¥{result.total?.toLocaleString()}）。重複登録にご注意ください。
+            </div>
+          )}
           <table className="result-table">
             <thead>
               <tr>
@@ -148,7 +172,8 @@ export default function ReceiptUploader({ onAdd }) {
             <button className="btn-secondary" onClick={handleReset}>やり直す</button>
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

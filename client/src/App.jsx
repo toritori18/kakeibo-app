@@ -24,7 +24,7 @@ export default function App() {
       <main className="app-main">
         {/* レシートアップロードエリア */}
         <section className="section-upload">
-          <ReceiptUploader onAdd={addExpense} />
+          <ReceiptUploader onAdd={addExpense} expenses={expenses} />
         </section>
 
         {/* グラフエリア（データがある場合のみ表示） */}
